@@ -1,0 +1,10 @@
+# Exclude .env file
+.env
+
+# Exclude all log files
+*.log
+mcp-server.log
+
+node_modules/
+
+.npmrc

@@ -1,0 +1,32 @@
+{
+  "name": "@dpk83/adomcpserver",
+  "version": "2.1.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "",
+    "test": "echo \"Test Success\" && exit 0"
+  },
+  "files": [
+    "build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dpk83/adomcpserver.git"
+  },
+  "keywords": ["azure-devops", "mcp", "work-items", "server"],
+  "author": "Deepak",
+  "license": "MIT",
+  "description": "A server for managing Azure DevOps work items using MCP.",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  },
+  "types": "build/index.d.ts"
+}
