@@ -1,13 +1,12 @@
 {
   "name": "@dpk83/adomcpserver",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
     "postbuild": "",
     "test": "echo \"Test Success\" && exit 0"
   },
-  "type": "module",
   "files": [
     "build"
   ],
@@ -31,6 +30,5 @@
   "devDependencies": {
     "@types/node": "^22.13.10",
     "typescript": "^5.8.2"
-  },
-  "types": "build/index.d.ts"
+  }
 }
