@@ -13,7 +13,7 @@ const AZURE_DEVOPS_PAT = process.env.AZURE_DEVOPS_PAT;
 export const workItemsTrackerToolName = "ADO_WorkItem_GetAndUpdate_Tool";
 export const workItemsTrackerToolDescription = "A tool to call Azure DevOps REST API to get, create, and update bugs, tasks, and other work items for your team using the REST API.";
 export const workItemsTrackerToolSchema = z.object({
-  workItemId: z.string().describe("The Azure DevOps API work item ID to operate on. For example, 1234."),
+  path: z.string().describe("The Azure DevOps API path to operate on. For example, /_apis/wit/workitems/1234."),
   method: z.enum(["get", "post", "put", "patch", "delete"]).describe("HTTP method to use"),
   queryParams: z.record(z.string()).optional().describe("Query parameters like $expand, fields, asOf, etc."),
   body: z.any().optional().describe("The request body (for POST, PUT, PATCH)"),
@@ -29,23 +29,21 @@ export type WorkItemResponse = {
   isError: boolean;
 };
 
-export const workItemsTrackerToolRequestHandler = async ({ workItemId, method, queryParams, body, contentType }: { workItemId: string; method: string; queryParams?: Record<string, string>; body?: any; contentType?: string }): Promise<WorkItemResponse> => {
+export const workItemsTrackerToolRequestHandler = async ({ path, method, queryParams, body, contentType }: { path: string; method: string; queryParams?: Record<string, string>; body?: any; contentType?: string }): Promise<WorkItemResponse> => {
   try {
     if (!AZURE_DEVOPS_PAT) {
       throw new Error("Failed to acquire access token");
     }
 
     // Build URL with query parameters
-    let url = `https://dev.azure.com/${AZURE_DEVOPS_ORG}/${AZURE_DEVOPS_PROJECT}/_apis/wit/workitems/${workItemId}`;
+    let url = `https://dev.azure.com/${AZURE_DEVOPS_ORG}/${AZURE_DEVOPS_PROJECT}/${path}`;
 
     if (queryParams && Object.keys(queryParams).length > 0) {
       const searchParams = new URLSearchParams();
       for (const [key, value] of Object.entries(queryParams)) {
         searchParams.append(key, value);
       }
-      url += `?${searchParams.toString()}&api-version=6.0`;
-    } else {
-      url += `?api-version=6.0`;
+      url += `?${searchParams.toString()}`;
     }
 
     // Prepare headers
@@ -94,7 +92,7 @@ export const workItemsTrackerToolRequestHandler = async ({ workItemId, method, q
       throw new Error(`ADO API error (${response.status}): ${JSON.stringify(responseData)}`);
     }
 
-    let resultText = `Result for ${method} ${workItemId}:\n\n`;
+    let resultText = `Result for ${url}:\n\n`;
     resultText += JSON.stringify(responseData, null, 2);
 
     return {
