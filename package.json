@@ -7,9 +7,13 @@
     "postbuild": "",
     "test": "echo \"Test Success\" && exit 0"
   },
+  "type": "module",
   "files": [
     "build"
   ],
+  "bin": {
+    "adomcpserver": "build/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dpk83/adomcpserver.git"
