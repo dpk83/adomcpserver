@@ -10,9 +10,9 @@ const AZURE_DEVOPS_ORG = process.env.AZURE_DEVOPS_ORG;
 const AZURE_DEVOPS_PROJECT = process.env.AZURE_DEVOPS_PROJECT;
 const AZURE_DEVOPS_PAT = process.env.AZURE_DEVOPS_PAT;
 
-export const workItemsTrackerToolName = "ADO_WorkItem_GetAndUpdate_Tool";
-export const workItemsTrackerToolDescription = "A tool to call Azure DevOps REST API to get, create, and update bugs, tasks, and other work items for your team using the REST API.";
-export const workItemsTrackerToolSchema = z.object({
+export const adoToolName = "ADO_TOOL";
+export const adoToolDescription = "A tool to call Azure DevOps REST API to perform various ADO operations like managing work items, working with wiki pages, builds, and more.";
+export const adoToolSchema = z.object({
   path: z.string().describe("The Azure DevOps API path to operate on. For example, /_apis/wit/workitems/1234."),
   method: z.enum(["get", "post", "put", "patch", "delete"]).describe("HTTP method to use"),
   queryParams: z.record(z.string()).optional().describe("Query parameters like $expand, fields, asOf, etc."),
@@ -20,7 +20,7 @@ export const workItemsTrackerToolSchema = z.object({
   contentType: z.string().optional().describe("Content-Type header for the request"),
 }).shape;
 
-export type WorkItemResponse = {
+export type AdoResponse = {
   content: (
     | { type: "text"; text: string }
     | { type: "image"; data: string; mimeType: string }
@@ -29,7 +29,7 @@ export type WorkItemResponse = {
   isError: boolean;
 };
 
-export const workItemsTrackerToolRequestHandler = async ({ path, method, queryParams, body, contentType }: { path: string; method: string; queryParams?: Record<string, string>; body?: any; contentType?: string }): Promise<WorkItemResponse> => {
+export const adoToolRequestHandler = async ({ path, method, queryParams, body, contentType }: { path: string; method: string; queryParams?: Record<string, string>; body?: any; contentType?: string }): Promise<AdoResponse> => {
   try {
     if (!AZURE_DEVOPS_PAT) {
       throw new Error("Failed to acquire access token");
@@ -92,7 +92,9 @@ export const workItemsTrackerToolRequestHandler = async ({ path, method, queryPa
       throw new Error(`ADO API error (${response.status}): ${JSON.stringify(responseData)}`);
     }
 
-    let resultText = `Result for ${url}:\n\n`;
+    let resultText = `Result for ${url}:
+
+`;
     resultText += JSON.stringify(responseData, null, 2);
 
     return {

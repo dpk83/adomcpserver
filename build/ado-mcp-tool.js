@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.workItemsTrackerToolRequestHandler = exports.workItemsTrackerToolSchema = exports.workItemsTrackerToolDescription = exports.workItemsTrackerToolName = void 0;
+exports.adoToolRequestHandler = exports.adoToolSchema = exports.adoToolDescription = exports.adoToolName = void 0;
 // Load environment variables from .env file
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -12,17 +12,16 @@ const zod_1 = require("zod");
 const AZURE_DEVOPS_ORG = process.env.AZURE_DEVOPS_ORG;
 const AZURE_DEVOPS_PROJECT = process.env.AZURE_DEVOPS_PROJECT;
 const AZURE_DEVOPS_PAT = process.env.AZURE_DEVOPS_PAT;
-exports.workItemsTrackerToolName = "ADO_WorkItem_GetAndUpdate_Tool";
-exports.workItemsTrackerToolDescription = "A tool to call Azure DevOps REST API to get, create, and update bugs, tasks, and other work items for your team using the REST API.";
-exports.workItemsTrackerToolSchema = zod_1.z.object({
-    // workItemId: z.string().describe("The Azure DevOps API work item ID to operate on. For example, 1234."),
+exports.adoToolName = "ADO_TOOL";
+exports.adoToolDescription = "A tool to call Azure DevOps REST API to perform various ADO operations like managing work items, working with wiki pages, builds, and more.";
+exports.adoToolSchema = zod_1.z.object({
     path: zod_1.z.string().describe("The Azure DevOps API path to operate on. For example, /_apis/wit/workitems/1234."),
     method: zod_1.z.enum(["get", "post", "put", "patch", "delete"]).describe("HTTP method to use"),
     queryParams: zod_1.z.record(zod_1.z.string()).optional().describe("Query parameters like $expand, fields, asOf, etc."),
     body: zod_1.z.any().optional().describe("The request body (for POST, PUT, PATCH)"),
     contentType: zod_1.z.string().optional().describe("Content-Type header for the request"),
 }).shape;
-const workItemsTrackerToolRequestHandler = async ({ path, method, queryParams, body, contentType }) => {
+const adoToolRequestHandler = async ({ path, method, queryParams, body, contentType }) => {
     try {
         if (!AZURE_DEVOPS_PAT) {
             throw new Error("Failed to acquire access token");
@@ -76,7 +75,9 @@ const workItemsTrackerToolRequestHandler = async ({ path, method, queryParams, b
         if (!response.ok) {
             throw new Error(`ADO API error (${response.status}): ${JSON.stringify(responseData)}`);
         }
-        let resultText = `Result for ${url}:\n\n`;
+        let resultText = `Result for ${url}:
+
+`;
         resultText += JSON.stringify(responseData, null, 2);
         return {
             content: [
@@ -102,5 +103,5 @@ const workItemsTrackerToolRequestHandler = async ({ path, method, queryParams, b
         };
     }
 };
-exports.workItemsTrackerToolRequestHandler = workItemsTrackerToolRequestHandler;
-//# sourceMappingURL=workitems-tracker.js.map
+exports.adoToolRequestHandler = adoToolRequestHandler;
+//# sourceMappingURL=ado-mcp-tool.js.map

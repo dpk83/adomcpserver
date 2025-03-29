@@ -6,19 +6,19 @@ dotenv.config();
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { workItemsTrackerToolName, workItemsTrackerToolDescription, workItemsTrackerToolSchema, workItemsTrackerToolRequestHandler } from "./workitems-tracker.js";
+import { adoToolName, adoToolDescription, adoToolSchema, adoToolRequestHandler } from "./ado-mcp-tool.js";
 
 const server = new McpServer({
-    name: "ado-workitems-tracker",
-    description: "Azure DevOps Work Items Tracker",
+    name: "ado-mcp-server",
+    description: "MCP server for Azure DevOps REST API",
     version: "1.0.0",
   });
   
 server.tool(
-    workItemsTrackerToolName,
-    workItemsTrackerToolDescription,
-    workItemsTrackerToolSchema,
-    workItemsTrackerToolRequestHandler,
+    adoToolName,
+    adoToolDescription,
+    adoToolSchema,
+    adoToolRequestHandler,
   );
   
   // Start the server with stdio transport

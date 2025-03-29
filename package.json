@@ -1,6 +1,6 @@
 {
   "name": "@dpk83/adomcpserver",
-  "version": "2.2.2",
+  "version": "1.0.0.0",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
